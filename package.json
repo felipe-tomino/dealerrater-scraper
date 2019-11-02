@@ -1,0 +1,19 @@
+{
+  "name": "podium",
+  "version": "1.0.0",
+  "author": "Felipe Tomino",
+  "description": "Dealership McKaig Chevrolet Buick most “overly positive” endorsements",
+  "scripts": {
+    "scrap": "node index.js",
+    "test": "NODE_ENV=test jest --forceExit"
+  },
+  "dependencies": {
+    "request-promise": "4.2.4",
+    "cheerio": "1.0.0-rc.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipe-tomino/podium.git"
+  },
+  "homepage": "https://github.com/felipe-tomino/podium#readme"
+}
