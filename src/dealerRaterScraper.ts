@@ -2,7 +2,7 @@ import { IDealerReview, ReviewRating, IEmployeeRating } from './review';
 import RequestPromise from 'request-promise';
 import $ from 'cheerio';
 
-export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP) :  5;
+export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP) : 5;
 
 export default class DealerRaterScraper {
   public readonly baseUrl: string = 'https://www.dealerrater.com/dealer';

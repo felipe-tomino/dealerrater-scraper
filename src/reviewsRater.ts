@@ -4,10 +4,10 @@ export default class ReviewsRater {
   constructor(private readonly reviews: IDealerReview[]) {}
 
   public getTopReviews(reviewsCount: number): IDealerReview[] {
-    return this.reviews.sort(this.sortReviewsByGreatestRatings).slice(0, reviewsCount);
+    return this.reviews.sort(this.sortReviewsByGreatestRatingsDesc).slice(0, reviewsCount);
   }
 
-  private sortReviewsByGreatestRatings(reviewA: IDealerReview, reviewB: IDealerReview): number {
+  private sortReviewsByGreatestRatingsDesc(reviewA: IDealerReview, reviewB: IDealerReview): number {
     const ratingPriority = [
       'recommend',
       'finalRating',
@@ -34,9 +34,18 @@ export default class ReviewsRater {
     const reviewAEmployeesRatingSum = reviewA.rating.employessWorkedWith.reduce((prev, current) => {
       return prev + current.rating
     }, 0);
+    const reviewAEmployeesRatingAverage = reviewAEmployeesRatingSum / reviewA.rating.employessWorkedWith.length;
     const reviewBEmployeesRatingSum = reviewB.rating.employessWorkedWith.reduce((prev, current) => {
       return prev + current.rating
     }, 0);
+    const reviewBEmployeesRatingAverage = reviewBEmployeesRatingSum / reviewB.rating.employessWorkedWith.length;
+    // sort by employees ratings average
+    if (reviewAEmployeesRatingAverage < reviewBEmployeesRatingAverage) {
+      return 1;
+    } else if (reviewAEmployeesRatingAverage > reviewBEmployeesRatingAverage) {
+      return -1;
+    }
+    // sort by employees ratings sum
     if (reviewAEmployeesRatingSum < reviewBEmployeesRatingSum) {
       return 1;
     } else if (reviewAEmployeesRatingSum > reviewBEmployeesRatingSum) {

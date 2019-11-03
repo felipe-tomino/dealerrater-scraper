@@ -17,6 +17,21 @@
     "ts-node": "8.4.1",
     "typescript": "3.6.4"
   },
+  "devDependencies": {
+    "@types/jest": "22.2.3",
+    "jest": "24.9.0",
+    "ts-jest": "24.1.0"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/test"
+    ],
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/felipe-tomino/podium.git"
