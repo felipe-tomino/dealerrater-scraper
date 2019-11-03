@@ -16,7 +16,7 @@ export default class ReviewsRater {
       'customerService',
       'qualityOfWork',
       'price',
-      'friendliness'
+      'friendliness',
     ];
 
     // sort by general ratings
@@ -28,17 +28,15 @@ export default class ReviewsRater {
       } else if (reviewARatingValue > reviewBRatingValue) {
         return -1;
       }
-    };
+    }
 
     // sort by employees ratings
-    const reviewAEmployeesRatingSum = reviewA.rating.employessWorkedWith.reduce((prev, current) => {
-      return prev + current.rating
-    }, 0);
+    const reviewAEmployeesRatingSum = reviewA.rating.employessWorkedWith.reduce((prev, cur) => prev + cur.rating, 0);
     const reviewAEmployeesRatingAverage = reviewAEmployeesRatingSum / reviewA.rating.employessWorkedWith.length;
-    const reviewBEmployeesRatingSum = reviewB.rating.employessWorkedWith.reduce((prev, current) => {
-      return prev + current.rating
-    }, 0);
+
+    const reviewBEmployeesRatingSum = reviewB.rating.employessWorkedWith.reduce((prev, cur) => prev + cur.rating, 0);
     const reviewBEmployeesRatingAverage = reviewBEmployeesRatingSum / reviewB.rating.employessWorkedWith.length;
+
     // sort by employees ratings average
     if (reviewAEmployeesRatingAverage < reviewBEmployeesRatingAverage) {
       return 1;

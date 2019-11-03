@@ -1,17 +1,18 @@
 import DealerRaterScraper from '../src/dealerRaterScraper';
-import RequestPromise from 'request-promise';
 import { html as page1html, dealerReview as review1 } from './htmlMocks/page1Mock';
 import { html as page2html, dealerReview as review2 } from './htmlMocks/page2Mock';
 
-jest.mock('request-promise', () => (url: string) => {
-  if (url === 'https://www.dealerrater.com/dealer/test-slug/page1') {
-    return page1html;
-  } else if (url === 'https://www.dealerrater.com/dealer/test-slug/page2') {
-    return page2html;
-  } else {
-    return '';
+jest.mock('request-promise', () => ({
+  get: (url: string) => {
+    if (url === 'https://www.dealerrater.com/dealer/test-slug/page1') {
+      return page1html;
+    } else if (url === 'https://www.dealerrater.com/dealer/test-slug/page2') {
+      return page2html;
+    } else {
+      return '';
+    }
   }
-});
+}));
 
 describe('DealerRaterScraper', () => {
   let dealerRaterScraper: DealerRaterScraper;

@@ -4,6 +4,7 @@
   "author": "Felipe Tomino",
   "description": "Dealership McKaig Chevrolet Buick most “overly positive” endorsements",
   "scripts": {
+    "lint": "tslint -p tsconfig.json -c tslint.json",
     "scrap": "ts-node src/main.ts",
     "test": "NODE_ENV=test jest --forceExit",
     "tsc": "tsc"
@@ -20,7 +21,9 @@
   "devDependencies": {
     "@types/jest": "22.2.3",
     "jest": "24.9.0",
-    "ts-jest": "24.1.0"
+    "ts-jest": "24.1.0",
+    "tslint": "6.0.0-beta0",
+    "tslint-config-airbnb": "5.11.2"
   },
   "jest": {
     "roots": [

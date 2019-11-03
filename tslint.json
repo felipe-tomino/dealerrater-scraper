@@ -1,0 +1,43 @@
+{
+  "defaultSeverity": "error",
+  "extends": "tslint-config-airbnb",
+  "jsRules": {
+    "no-unused-expression": true
+  },
+  "rules": {
+    "max-line-length": [
+      true,
+      120
+    ],
+    "align": [true, "parameters", "statements"],
+    "one-variable-per-declaration": false,
+    "quotemark": [true, "single"],
+    "object-literal-sort-keys": false,
+    "interface-name": [false],
+    "arrow-parens": false,
+    "no-namespace": false,
+    "import-name": false,
+    "no-floating-promises": false,
+    "await-promise": false,
+    "no-else-after-return": false,
+    "no-this-assignment": [
+      true,
+      { "allow-destructuring": true }
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "property-declaration"
+    ],
+    "variable-name": {
+      "options": ["allow-leading-underscore"]
+    }
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "**/**.json"
+    ]
+  }
+}

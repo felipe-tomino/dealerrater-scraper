@@ -2,7 +2,7 @@ import { logReview } from './review';
 import DealerRaterScraper, { PAGES_TO_SCRAP } from './dealerRaterScraper';
 import ReviewsRater from './reviewsRater';
 
-const REVIEWS_TO_RETRIEVE = process.env.REVIEWS_TO_RETRIEVE ? parseInt(process.env.REVIEWS_TO_RETRIEVE) : 3;
+const REVIEWS_TO_RETRIEVE = process.env.REVIEWS_TO_RETRIEVE ? parseInt(process.env.REVIEWS_TO_RETRIEVE, 10) : 3;
 
 const mcKaigSlug = 'McKaig-Chevrolet-Buick-A-Dealer-For-The-People-dealer-reviews-23685';
 const mcKaigScraper = new DealerRaterScraper(mcKaigSlug);

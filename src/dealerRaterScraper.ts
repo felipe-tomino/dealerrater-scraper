@@ -1,8 +1,8 @@
 import { IDealerReview, ReviewRating, IEmployeeRating } from './review';
-import RequestPromise from 'request-promise';
-import $ from 'cheerio';
+import * as RequestPromise from 'request-promise';
+import * as $ from 'cheerio';
 
-export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP) : 5;
+export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP, 10) : 5;
 
 export default class DealerRaterScraper {
   public readonly baseUrl: string = 'https://www.dealerrater.com/dealer';
@@ -33,7 +33,7 @@ export default class DealerRaterScraper {
       const url = this.getPageUrl(page + 1);
 
       console.log(`Fetching data from ${url}`);
-      const pageHtml = await RequestPromise(url);
+      const pageHtml = await RequestPromise.get(url);
       const pageHtmlReviews = $('.review-entry', pageHtml).toArray();
       reviewsScrap = reviewsScrap.concat(pageHtmlReviews);
     }));
@@ -42,7 +42,7 @@ export default class DealerRaterScraper {
   }
 
   private getReviewRating(reviewScrap: CheerioElement): ReviewRating {
-    let rating = {
+    const rating = {
       finalRating: 0,
       overallRating: 0,
       customerService: 0,
@@ -82,15 +82,15 @@ export default class DealerRaterScraper {
   }
 
   private getEmployeesRating(employees: CheerioElement[]): IEmployeeRating[] {
-    return employees.map((employee) => ({
+    return employees.map(employee => ({
       name: $('a', employee).text().trim(),
       rating: this.getRatingScrapValue($('.employee-rating-badge-sm', employee)),
     }));
-  };
+  }
 
   private getRatingScrapValue(rating: Cheerio): number {
     const ratingHtml = rating.html();
     const ratingValue = ratingHtml ? ratingHtml.match(/rating\-(\d\d)/) : 0;
     return ratingValue ? (parseFloat(ratingValue[1]) / 10) : 0;
-  };
+  }
 }

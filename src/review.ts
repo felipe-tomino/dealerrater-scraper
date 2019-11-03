@@ -44,7 +44,7 @@ export class ReviewRating implements IReviewRating {
   }
 
   public getPropertyValue(propertyName: string): any {
-    switch(propertyName) {
+    switch (propertyName) {
       case 'finalRating': return this.finalRating;
       case 'ratingsWeightedSum':
         return (2 * this.overallRating + this.customerService + this.qualityOfWork + this.friendliness + this.price);
@@ -56,7 +56,7 @@ export class ReviewRating implements IReviewRating {
       case 'recommend': return this.recommend;
       case 'employessWorkedWith': return this.employessWorkedWith;
     }
-  };
+  }
 }
 
 export function logReview(review: IDealerReview): void {
