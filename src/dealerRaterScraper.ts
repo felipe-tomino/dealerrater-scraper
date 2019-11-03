@@ -1,30 +1,8 @@
+import { IDealerReview, ReviewRating, IEmployeeRating } from './review';
 import RequestPromise from 'request-promise';
 import $ from 'cheerio';
 
-export const PAGES_TO_SCRAP = 5;
-
-export interface DealerReview {
-  title: string;
-  content: string;
-  date: Date;
-  username: string;
-  rating: ReviewRating;
-}
-
-export interface ReviewRating {
-  overallRating: number;
-  customerService: number;
-  qualityOfWork: number;
-  friendliness: number;
-  price: number;
-  recommend: boolean;
-  employessWorkedWith: EmployeeRating[];
-}
-
-export interface EmployeeRating {
-  name: string;
-  rating: number;
-}
+export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP) :  5;
 
 export default class DealerRaterScraper {
   public readonly baseUrl: string = 'https://www.dealerrater.com/dealer';
@@ -35,7 +13,7 @@ export default class DealerRaterScraper {
     return `${this.baseUrl}/${this.dealerSlug}/page${page}`;
   }
 
-  public async getReviews(pages: number = PAGES_TO_SCRAP): Promise<DealerReview[]> {
+  public async getReviews(pages: number = PAGES_TO_SCRAP): Promise<IDealerReview[]> {
     const reviewsScrap = await this.scrapReviews(pages);
 
     return reviewsScrap.map((reviewScrap) => {
@@ -65,14 +43,17 @@ export default class DealerRaterScraper {
 
   private getReviewRating(reviewScrap: CheerioElement): ReviewRating {
     let rating = {
+      finalRating: 0,
       overallRating: 0,
       customerService: 0,
       qualityOfWork: 0,
       friendliness: 0,
       price: 0,
       recommend: true,
-      employessWorkedWith: [] as EmployeeRating[],
+      employessWorkedWith: [] as IEmployeeRating[],
     };
+
+    rating.finalRating = this.getRatingScrapValue($('.dealership-rating', reviewScrap));
 
     const reviewRatings = $('.review-ratings-all', reviewScrap).find('.tr').toArray();
 
@@ -97,10 +78,10 @@ export default class DealerRaterScraper {
     const employees = $('.review-employee', reviewScrap).toArray();
     rating.employessWorkedWith = this.getEmployeesRating(employees);
 
-    return rating;
+    return new ReviewRating(rating);
   }
 
-  private getEmployeesRating(employees: CheerioElement[]): EmployeeRating[] {
+  private getEmployeesRating(employees: CheerioElement[]): IEmployeeRating[] {
     return employees.map((employee) => ({
       name: $('a', employee).text().trim(),
       rating: this.getRatingScrapValue($('.employee-rating-badge-sm', employee)),
