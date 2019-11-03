@@ -7,7 +7,7 @@ describe('ReviewsRater', () => {
   let sortedReviews: IDealerReview[];
 
   beforeAll(() => {
-    reviews = createReviews();
+    createReviews();
     reviewsRater = new ReviewsRater(reviews);
   });
 
