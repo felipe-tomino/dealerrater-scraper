@@ -46,7 +46,7 @@ The following [NPM packages](https://www.npmjs.com/) were used:
 
 After downloading the project, go to its directory and run the following command:
 ```bash
-npm run install
+npm install
 ```
 And it will install all of the project dependencies.
 
