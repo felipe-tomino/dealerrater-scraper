@@ -1,13 +1,15 @@
 import { IDealerReview, ReviewRating, IEmployeeRating } from './review';
-import * as RequestPromise from 'request-promise';
 import * as $ from 'cheerio';
+import Crawler from './crawler';
 
 export const PAGES_TO_SCRAP = process.env.PAGES_TO_SCRAP ? parseInt(process.env.PAGES_TO_SCRAP, 10) : 5;
 
-export default class DealerRaterScraper {
+export default class DealerRaterScraper extends Crawler {
   public readonly baseUrl: string = 'https://www.dealerrater.com/dealer';
 
-  constructor(public dealerSlug: string) {}
+  constructor(public readonly dealerSlug: string) {
+    super();
+  }
 
   public getPageUrl(page: number = 1): string {
     return `${this.baseUrl}/${this.dealerSlug}/page${page}`;
@@ -16,29 +18,29 @@ export default class DealerRaterScraper {
   public async getReviews(pages: number = PAGES_TO_SCRAP): Promise<IDealerReview[]> {
     const reviewsScrap = await this.scrapReviews(pages);
 
-    return reviewsScrap.map((reviewScrap) => {
-      return {
-        title: $('h3', reviewScrap).text().replace(/\"/g, '').trim(),
-        content: $('.review-content', reviewScrap).text(),
-        date: new Date(Date.parse($('.review-date div', reviewScrap).first().text())),
-        username: $('span', reviewScrap).first().text().replace(/^(\s|\-)+/g, ''),
-        rating: this.getReviewRating(reviewScrap),
-      };
-    });
+    return reviewsScrap.map(reviewScrap => ({
+      title: $('h3', reviewScrap).text().replace(/\"/g, '').trim(),
+      content: $('.review-content', reviewScrap).text(),
+      date: new Date(Date.parse($('.review-date div', reviewScrap).first().text())),
+      username: $('span', reviewScrap).first().text().replace(/^(\s|\-)+/g, ''),
+      rating: this.getReviewRating(reviewScrap),
+    }));
   }
 
   private async scrapReviews(pages: number): Promise<CheerioElement[]> {
-    let reviewsScrap: CheerioElement[] = [];
-    await Promise.all([...Array(pages).keys()].map(async (page) => {
+    const htmlPages = await this.getDealerHtmlPages(pages);
+    return htmlPages.reduce((reviews, htmlPage) => {
+      const pageReviews = $('.review-entry', htmlPage).toArray();
+      return reviews.concat(pageReviews);
+    }, []);
+  }
+
+  private async getDealerHtmlPages(pages: number): Promise<CheerioElement[][]> {
+    const pageIndexes = [...Array(pages).keys()];
+    return Promise.all(pageIndexes.map((page) => {
       const url = this.getPageUrl(page + 1);
-
-      console.log(`Fetching data from ${url}`);
-      const pageHtml = await RequestPromise.get(url);
-      const pageHtmlReviews = $('.review-entry', pageHtml).toArray();
-      reviewsScrap = reviewsScrap.concat(pageHtmlReviews);
+      return this.downloadPage(url);
     }));
-
-    return reviewsScrap;
   }
 
   private getReviewRating(reviewScrap: CheerioElement): ReviewRating {
